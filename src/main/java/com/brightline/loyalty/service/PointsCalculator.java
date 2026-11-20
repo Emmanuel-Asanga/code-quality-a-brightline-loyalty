@@ -55,7 +55,7 @@ public class PointsCalculator {
         requireValidAmount(amount);
         Member member = findMember(memberId);
         BigDecimal tierPoints = tierRules.ruleFor(member.tier()).applyTo(basePointsFor(amount));
-        return toIntPoints(tierPoints.add(bonusPointsFor(amount)), amount);
+        return toIntPointsOrFail(tierPoints.add(bonusPointsFor(amount)), amount);
     }
 
     private void requireValidMemberId(String memberId) {
@@ -88,7 +88,7 @@ public class PointsCalculator {
         return amount.compareTo(BONUS_THRESHOLD) > 0 ? BONUS_POINTS : BigDecimal.ZERO;
     }
 
-    private int toIntPoints(BigDecimal points, BigDecimal amount) {
+    private int toIntPointsOrFail(BigDecimal points, BigDecimal amount) {
         if (points.compareTo(MAXIMUM_POINTS) > 0) {
             throw new InvalidPurchaseException("Purchase amount " + amount
                     + " is too large: the points awarded would exceed " + Integer.MAX_VALUE);
