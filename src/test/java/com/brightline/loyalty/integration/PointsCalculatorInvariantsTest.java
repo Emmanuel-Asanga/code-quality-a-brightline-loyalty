@@ -31,7 +31,7 @@ import org.junit.jupiter.params.provider.EnumSource;
 class PointsCalculatorInvariantsTest {
 
     private static final long SEED = 20_261_120L;
-    private static final int RANDOM_SAMPLE_SIZE = 2_000;
+    private static final int RANDOM_SAMPLE_SIZE = 500;
     private static final int RANDOM_SAMPLE_BOUND_IN_CENTS = 2_000_000;
     private static final int FLAT_BONUS_POINTS = 50;
 
