@@ -20,6 +20,7 @@ import com.brightline.loyalty.service.PointsCalculator;
 import com.brightline.loyalty.service.TierRule;
 import com.brightline.loyalty.service.TierRuleRegistry;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -374,10 +375,8 @@ class PointsCalculatorTest {
     @Test
     @DisplayName("Whatever rule is registered for a tier is the one applied (open for extension)")
     void shouldDelegateToTheRuleRegisteredForTheMembersTier() {
-        TierRuleRegistry registryWithCustomGoldRule = new TierRuleRegistry(List.of(
-                new MultiplierTierRule(MembershipTier.STANDARD, BigDecimal.ONE),
-                new MultiplierTierRule(MembershipTier.SILVER, new BigDecimal("1.5")),
-                new FlatRewardRule(MembershipTier.GOLD, 1000)));
+        TierRuleRegistry registryWithCustomGoldRule =
+                registryWithRule(new FlatRewardRule(MembershipTier.GOLD, 1000));
         PointsCalculator customCalculator =
                 new PointsCalculator(memberRepository, registryWithCustomGoldRule);
         givenMemberWithTier(MembershipTier.GOLD);
@@ -406,6 +405,16 @@ class PointsCalculatorTest {
                 () -> new PointsCalculator(memberRepository, null));
 
         assertEquals("tierRules must not be null", failure.getMessage());
+    }
+
+    /** Gives every tier a 1x rule except {@code customRule}'s tier, so no tier list is assumed. */
+    private static TierRuleRegistry registryWithRule(TierRule customRule) {
+        List<TierRule> rules = Arrays.stream(MembershipTier.values())
+                .<TierRule>map(tier -> tier == customRule.tier()
+                        ? customRule
+                        : new MultiplierTierRule(tier, BigDecimal.ONE))
+                .toList();
+        return new TierRuleRegistry(rules);
     }
 
     /** A rule that is not a multiplier: proves tiers are not limited to one kind of reward. */
