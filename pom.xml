@@ -55,7 +55,15 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>3.9.0</version>
+            </plugin>
+        </plugins>
+    </reporting>
     <build>
         <finalName>brightline-loyalty</finalName>
         <plugins>

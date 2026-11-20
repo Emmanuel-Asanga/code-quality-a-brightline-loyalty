@@ -5,7 +5,7 @@ package com.brightline.loyalty.exception;
  * infrastructure failure (for example a database outage). It is not used for a member that
  * is simply absent.
  */
-public class MemberRepositoryException extends RuntimeException {
+public class MemberRepositoryException extends LoyaltyException {
 
     private static final long serialVersionUID = 1L;
 
