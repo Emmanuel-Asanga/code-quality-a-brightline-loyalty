@@ -12,7 +12,12 @@ The service follows the business rules below:
 | Zero purchase | A purchase of zero is valid and earns 0 points. |
 | Invalid input | Invalid input is rejected with a clear exception instead of silently returning 0. |
 
-I designed the service so that adding a new membership tier requires only two changes without modifying the existing calculation logic.
+Adding a new membership tier requires only two production-code changes:
+
+1. Add the new tier as an enum constant in `MembershipTier.java`.
+2. Add the corresponding tier rule in `TierRuleRegistry.java`.
+
+The calculator itself does not need to change because it delegates tier-specific calculations to the registry.
 
 For more details about my design decisions and implementation, see [REFACTORING.md](REFACTORING.md).
 
@@ -59,7 +64,7 @@ To compile and run the demonstration, I use:
 
 ```bash
 mvn compile
-java -cp target/classes com.brightline.loyalty.Demo
+mvn exec:java -Dexec.mainClass=com.brightline.loyalty.Demo
 ```
 
 The expected output is:
@@ -71,6 +76,15 @@ Member m3, GHS 600 -> 140 points
 Member unknown, GHS 100 -> FAILED: No member found with id 'unknown'
 Member m1, GHS -5 -> FAILED: Purchase amount must not be negative: -5
 ```
+
+###Run the application using Maven:
+
+```bash
+mvn exec:java -Dexec.mainClass=com.brightline.loyalty.Demo
+```
+
+Maven manages the project's runtime classpath, including any dependencies configured in `pom.xml`.
+
 
 An important behaviour I implemented is that an unknown member is reported as a failure rather than silently receiving zero points.
 
@@ -106,7 +120,7 @@ mvn test
 To run only the unit tests:
 
 ```bash
-mvn test -Dtest='com/brightline/loyalty/unit/*Test'
+mvn test "-Dtest=com.brightline.loyalty.unit.*Test"
 ```
 
 To run only the integration tests:
