@@ -9,6 +9,9 @@ import java.math.RoundingMode;
  *
  * <p>Fractional results are truncated, not rounded: 3 base points at 1.5x is 4, not 5. This is
  * the loyalty programme's existing behaviour and is deliberate.
+  * <p>The rule is intended to receive non-negative base points. RoundingMode.DOWN rounds
+ * towards zero, which is relevant if negative values are ever supplied.
+ *
  *
  * @param tier the tier this rule applies to
  * @param multiplier a positive factor, for example {@code 1.5}
